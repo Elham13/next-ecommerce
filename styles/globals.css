@@ -27,3 +27,24 @@ label {
 .btn-primary:active {
   @apply bg-blue-700;
 }
+
+table.basic {
+  @apply w-full overflow-x-auto;
+}
+
+table.basic tr th,
+table.basic tr td {
+  @apply border text-left px-2 py-2;
+}
+
+table.basic tbody tr:hover {
+  @apply bg-gray-100;
+}
+
+.paginationChangeBtn {
+  @apply text-xl cursor-pointer h-8 w-8 text-center font-bold select-none;
+}
+
+.paginationChangeBtn.disable {
+  @apply text-gray-300 select-none cursor-not-allowed;
+}

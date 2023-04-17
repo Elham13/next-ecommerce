@@ -1,1 +1,1 @@
-export const CREATE_PRODUCT = "/api/products";
+export const PRODUCTS = "/api/products";

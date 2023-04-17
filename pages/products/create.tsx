@@ -1,16 +1,24 @@
+import CircularProgress from "@/components/CircularProgress";
 import Layout from "@/components/Layout";
-import { ICreateProductValues, IProductCreateResponse } from "@/types/products";
-import { CREATE_PRODUCT } from "@/utils/endpoints";
+import { IProduct, IProductResponse } from "@/types/products";
+import { PRODUCTS } from "@/utils/endpoints";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 
+const formDataInitialValues = {
+  _id: "",
+  title: "",
+  description: "",
+  price: 0,
+};
+
 const CreateProduct = () => {
-  const [formData, setFormData] = useState<ICreateProductValues>({
-    title: "",
-    description: "",
-    price: 0,
-  });
+  const { back: goBack } = useRouter();
+
+  const [formData, setFormData] = useState<IProduct>(formDataInitialValues);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,11 +30,12 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    const payload = { ...formData, _id: undefined };
     try {
-      const { data } = await axios.post<IProductCreateResponse>(
-        CREATE_PRODUCT,
-        formData
-      );
+      const { data } = await axios.post<IProductResponse>(PRODUCTS, payload);
+      setFormData(formDataInitialValues);
+      goBack();
       toast.success(data.message);
     } catch (err: any) {
       const message = err.response
@@ -35,12 +44,10 @@ const CreateProduct = () => {
           : err.response.data.message
         : err.message;
       toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
-
-  //   useEffect(() => {
-  //     console.log("formData: ", formData);
-  //   }, [formData]);
 
   return (
     <Layout>
@@ -74,7 +81,7 @@ const CreateProduct = () => {
         />
 
         <button type="submit" className="btn-primary">
-          Create
+          {loading ? <CircularProgress height={6} width={6} /> : "Create"}
         </button>
       </form>
     </Layout>

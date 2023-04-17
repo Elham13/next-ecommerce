@@ -1,9 +1,12 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-const ProductSchema = new Schema({
-  title: { type: String, required: true },
-  description: String,
-  price: { type: Number, required: true },
-});
+const ProductSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    description: String,
+    price: { type: Number, required: true },
+  },
+  { timestamps: true }
+);
 
-export const Product = model("product", ProductSchema);
+export const Product = models.Product || model("Product", ProductSchema);
